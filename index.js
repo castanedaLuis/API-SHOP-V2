@@ -5,6 +5,7 @@ const {
   boomErrorHandler,
   logErrors,
   errorHandler,
+  ormErrorHandler
 } = require('./middlewares/error.handler');
 
 const app = express();
@@ -41,6 +42,7 @@ app.get('/api/nueva-ruta', (req, res) => {
 routerApi(app);
 
 app.use(logErrors);
+app.use(ormErrorHandler)
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
