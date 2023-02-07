@@ -49,6 +49,7 @@ class Customer extends Model {
     this.belongsTo(models.User, {as: 'user'});
   }
 
+
   static config(sequelize) {
     return {
       sequelize,

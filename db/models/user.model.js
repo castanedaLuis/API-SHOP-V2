@@ -40,9 +40,12 @@ class User extends Model{
      * hacer una instancia del objeto para acceder a ellos
      */
 
-    static associate() {
-        // associate
-      }
+    static associate(models) {
+      this.hasOne(models.Customer, {
+        as: 'customer',
+        foreignKey: 'userId'
+      });
+    }
     
       static config(sequelize) {
         return {
