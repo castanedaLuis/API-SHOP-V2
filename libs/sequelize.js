@@ -10,7 +10,8 @@ const sequelize = new Sequelize(URI, { dialect: 'postgres', logging: console.log
 
 //le mandamos la conexion a nuestra función
 setupModels(sequelize);
-//le decimos a sequelize que haga una sincronización
-sequelize.sync();
+//le decimos a sequelize que haga una sincronización 
+// ahora lo hacemos con migraciones ya no con sync
+//sequelize.sync();
 
 module.exports = sequelize;
