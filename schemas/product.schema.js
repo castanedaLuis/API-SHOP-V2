@@ -14,6 +14,9 @@ const name = Joi.string().min(3).max(15).messages({
     'string.max': `"nombre" debe tener una longitud máxima de {#limit}`
   });
 
+  const limit = Joi.number().integer();
+  const offset = Joi.number().integer();
+
 const createProductSchema = Joi.object({
   name: name.required(),
   price: price.required(),
@@ -34,4 +37,9 @@ const getProductSchema = Joi.object({
   id: id.required(),
 });
 
-module.exports = { createProductSchema, updateProductSchema, getProductSchema }
+const queryProductSchema = Joi.object({
+  limit,
+  offset
+});
+
+module.exports = { createProductSchema, updateProductSchema, getProductSchema, queryProductSchema }
