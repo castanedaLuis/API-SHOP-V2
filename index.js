@@ -7,6 +7,7 @@ const {
   errorHandler,
   ormErrorHandler
 } = require('./middlewares/error.handler');
+const { checkApiKey } = require('./middlewares/auth.handler');
 
 const app = express();
 const port = 3006;
@@ -35,8 +36,12 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/api/nueva-ruta', (req, res) => {
-  res.send('Hola, soy una nueva ruta');
+app.get('/api/nueva-ruta', 
+  checkApiKey,
+  (req, res) => {
+  res.status(200).json({
+    PruebaAuth:'Hola, soy una ruta proteguida por una apiKey'
+  });
 });
 
 routerApi(app);
