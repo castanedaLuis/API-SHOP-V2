@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const ProductsService = require('./../services/product.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const { createProductSchema, updateProductSchema, getProductSchema, queryProductSchema } = require('./../schemas/product.schema');
@@ -32,6 +33,7 @@ router.get('/:id',
 
 
 router.post('/',
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(createProductSchema, 'body'),
   async (req, res) => {
     const body = req.body;
@@ -42,6 +44,7 @@ router.post('/',
 
 //PUT ó PATCH--> parcial
 router.patch('/:id',
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(updateProductSchema, 'body'),
   async (req, res, next) => {
@@ -56,7 +59,9 @@ router.patch('/:id',
   }
 );
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',
+  passport.authenticate('jwt', {session: false}),
+  async (req, res) => {
   const { id } = req.params;
   const rta = await service.delete(id);
   res.json(rta);
