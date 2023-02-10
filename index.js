@@ -1,6 +1,7 @@
 const express = require('express');
 const routerApi = require('./routes');
 const cors = require('cors');
+require('./utils/auth'); // para llamar la estrategía de passport
 const {
   boomErrorHandler,
   logErrors,
@@ -28,6 +29,8 @@ const options = {
 };
 //app.use(cors(options));
 app.use(cors());
+
+
 
 app.get('/', (req, res) => {
   res.json({
