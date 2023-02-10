@@ -11,11 +11,10 @@ router.post('/login',
   passport.authenticate('local', {session: false}),
   async (req, res, next) => {
     try {
-
       const user = req.user;
       const payload = {
-        sub: req.id, // firmamos ekl token 
-        role: req.role
+        sub: user.id, // firmamos ekl token 
+        role: user.role
       }
       const token = jwt.sign(payload, config.jwtSecret);
 
