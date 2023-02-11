@@ -44,7 +44,7 @@ class AuthService {
         sub: user.id 
     };
 
-    const token = jwt.sign(payload, config.jwtSecret, {expiresIn: '3min'});
+    const token = jwt.sign(payload, config.jwtSecretRecovery, {expiresIn: '3min'});
 
     const link = `http://sitiomyfrontend.com/recovery?token=${token}`;
     await service.update(user.id, {recoveryToken: token});
@@ -61,6 +61,29 @@ class AuthService {
 
   }
 
+  async changePassword(token, newPassword) {
+    try {
+
+        //verificamos el token
+      const payload = jwt.verify(token, config.jwtSecretRecovery);
+
+      const user = await service.findOne(payload.sub);
+
+      if (user.recoveryToken !== token) {
+        throw boom.unauthorized();
+      }
+
+      const hash = await bcrypt.hash(newPassword, 10);
+
+      await service.update(user.id, {recoveryToken: null, password: hash});
+      
+      return { message: 'password changed' };
+
+    } catch (error) {
+      throw boom.unauthorized();
+    }
+  }
+
   async sendMail(infoMail) {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -75,6 +98,8 @@ class AuthService {
     return { message: 'mail sent' };
 
   }
+
+
   
 }
 
