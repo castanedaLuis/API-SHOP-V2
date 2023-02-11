@@ -35,11 +35,33 @@ class AuthService {
     };
   }
 
-  async sendMail(email) {
+  async sendRecovery(email) {
     const user = await service.findByEmail(email);
     if (!user) {
         throw boom.unauthorized('Sorry, Unauthorized');
     }
+    const payload = { 
+        sub: user.id 
+    };
+
+    const token = jwt.sign(payload, config.jwtSecret, {expiresIn: '3min'});
+
+    const link = `http://sitiomyfrontend.com/recovery?token=${token}`;
+    await service.update(user.id, {recoveryToken: token});
+    
+    const mail = {
+      from: process.env.CORREO_RECOVERY_PASSWORD,
+      to: `${user.email}`,
+      subject: "Email para recuperar contraseña",
+      html: `<b>Ingresa a este link => ${link}</b>`,
+    }
+
+    const rta = await this.sendMail(mail);
+    return rta;
+
+  }
+
+  async sendMail(infoMail) {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       secure: true, // true for 465, false for other ports
@@ -49,15 +71,11 @@ class AuthService {
         pass: process.env.PASSWORD_RECOVERY_PASSWORD,
       }
     });
-    await transporter.sendMail({
-      from: process.env.CORREO_RECOVERY_PASSWORD, // sender address
-      to: `${user.email}`, // list of receivers
-      subject: "Este es un nuevo correo", // Subject line
-      text: "Hola santi", // plain text body
-      html: "<b>Hola santi</b>", // html body
-    });
+    await transporter.sendMail(infoMail);
     return { message: 'mail sent' };
+
   }
+  
 }
 
 module.exports = AuthService;
