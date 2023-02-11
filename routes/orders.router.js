@@ -32,6 +32,7 @@ router.post('/',
 		try {
 			const body = req.body;
 			const newOrder = await service.create(body);
+			console.log('🔥', newOrder);
 			res.status(201).json({ newOrder });
 		} catch (error) {
 			next(error);
