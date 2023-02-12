@@ -5,4 +5,5 @@ La autenticación y autorización se hacen mendiante JWT y passport.js en donde 
 
 npm run migrations:generate
 npm run migrations:run
+docker-compose up -d postgres  
 npm run dev
